@@ -20,7 +20,7 @@
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            max-width: 760px;
+            max-width: 700px;
             width: 100%;
             text-align: center;
             position: relative;
@@ -160,79 +160,10 @@
             color: #0c5460;
             font-weight: bold;
         }
-
-        /* Palette Grid Styling */
-        .palette-card {
-            background-color: #fbfbfd;
-            border: 1px solid #e1e4e8;
-            border-radius: 6px;
-            padding: 14px;
-            margin-top: 25px;
-        }
-        .palette-legend {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            font-size: 0.85rem;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-            font-weight: bold;
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .legend-box {
-            width: 14px;
-            height: 14px;
-            border-radius: 3px;
-            border: 1px solid #bbb;
-            display: inline-block;
-        }
-        .legend-answered { background-color: #28a745; border-color: #28a745; }
-        .legend-unanswered { background-color: #ffffff; border-color: #cccccc; }
-        .legend-current { background-color: #003366; border-color: #003366; }
-
-        .palette-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
-            gap: 7px;
-        }
-        .palette-btn {
-            padding: 8px 0;
-            font-size: 0.9rem;
-            font-weight: bold;
-            border: 1px solid #cccccc;
-            background-color: #ffffff;
-            color: #495057;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.15s ease-in-out;
-        }
-        .palette-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
-        }
-        .palette-btn.answered {
-            background-color: #28a745;
-            color: #ffffff;
-            border-color: #218838;
-        }
-        .palette-btn.current {
-            border: 2px solid #003366 !important;
-            box-shadow: 0 0 0 2px rgba(0, 51, 102, 0.25);
-            font-weight: 900;
-        }
-        .palette-btn.current:not(.answered) {
-            background-color: #e7f1ff;
-            color: #003366;
-        }
-
         .quiz-nav-buttons {
             display: flex;
             gap: 12px;
-            margin-top: 20px;
+            margin-top: 25px;
         }
         .action-btn {
             display: inline-block;
@@ -353,16 +284,6 @@
         <div class="question" id="question">Loading question...</div>
         <ul class="options" id="options"></ul>
         
-        <!-- Question Palette Grid -->
-        <div class="palette-card">
-            <div class="palette-legend" id="palette-legend">
-                <span class="legend-item"><span class="legend-box legend-answered"></span> <span id="leg-ans-txt">Answered: 0</span></span>
-                <span class="legend-item"><span class="legend-box legend-unanswered"></span> <span id="leg-unans-txt">Unattempted: 36</span></span>
-                <span class="legend-item"><span class="legend-box legend-current"></span> <span id="leg-cur-txt">Current</span></span>
-            </div>
-            <div class="palette-grid" id="palette-grid"></div>
-        </div>
-
         <div class="quiz-nav-buttons">
             <button type="button" class="action-btn prev-btn" id="prev-button">Previous Question</button>
             <button type="button" class="action-btn" id="next-button">Next Question</button>
@@ -431,9 +352,6 @@
             submitBtn: "Submit Exam",
             qCounterWord: "Question",
             qOfWord: "of",
-            legAnswered: "Answered",
-            legUnanswered: "Unattempted",
-            legCurrent: "Current",
             thankYou: "Thank You!",
             finishBtn: "Finish & Back to Home",
             msgCompleted: "Well Done",
@@ -464,9 +382,6 @@
             submitBtn: "परीक्षा जमा करें",
             qCounterWord: "प्रश्न",
             qOfWord: "का",
-            legAnswered: "हल किए गए",
-            legUnanswered: "हल नहीं किए",
-            legCurrent: "वर्तमान",
             thankYou: "धन्यवाद!",
             finishBtn: "समाप्त करें और होम पेज पर जाएं",
             msgCompleted: "बहुत बढ़िया",
@@ -887,7 +802,7 @@
     let userAnswers = {}; // Maps question index -> selected option letter ('a', 'b', 'c', 'd')
 
     let startPage, regPage, quizPage, endPage, adminPage;
-    let quizForm, qCounterEl, questionEl, optionsContainer, paletteGridEl, prevBtn, nextBtn, timerEl, scoreSummaryEl, adminTableBody;
+    let quizForm, qCounterEl, questionEl, optionsContainer, prevBtn, nextBtn, timerEl, scoreSummaryEl, adminTableBody;
 
     document.addEventListener("DOMContentLoaded", function () {
         const ADMIN_PASSWORD = "Operating@123"; 
@@ -902,7 +817,6 @@
         qCounterEl = document.getElementById('q-counter');
         questionEl = document.getElementById('question');
         optionsContainer = document.getElementById('options');
-        paletteGridEl = document.getElementById('palette-grid');
         prevBtn = document.getElementById('prev-button');
         nextBtn = document.getElementById('next-button');
         timerEl = document.getElementById('timer');
@@ -1006,7 +920,6 @@
             nextBtn.classList.remove('submit-nav-btn');
         }
 
-        updatePaletteLegend();
         updateTimerDisplay();
 
         document.getElementById('thank-you-title').innerText = labels.thankYou;
@@ -1094,55 +1007,6 @@
             li.appendChild(button);
             optionsContainer.appendChild(li);
         });
-
-        renderPaletteGrid();
-    }
-
-    function renderPaletteGrid() {
-        if (!paletteGridEl) return;
-        paletteGridEl.innerHTML = '';
-
-        quizData.forEach((_, idx) => {
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'palette-btn';
-            btn.innerText = idx + 1;
-
-            const isAnswered = userAnswers[idx] !== undefined && userAnswers[idx] !== null;
-            if (isAnswered) {
-                btn.classList.add('answered');
-            }
-
-            if (idx === currentQuiz) {
-                btn.classList.add('current');
-            }
-
-            btn.addEventListener('click', () => jumpToQuestion(idx));
-            paletteGridEl.appendChild(btn);
-        });
-
-        updatePaletteLegend();
-    }
-
-    function updatePaletteLegend() {
-        const labels = uiLabels[currentLang];
-        const answeredCount = Object.keys(userAnswers).length;
-        const unansweredCount = quizData.length - answeredCount;
-
-        const legAns = document.getElementById('leg-ans-txt');
-        const legUnans = document.getElementById('leg-unans-txt');
-        const legCur = document.getElementById('leg-cur-txt');
-
-        if (legAns) legAns.innerText = `${labels.legAnswered}: ${answeredCount}`;
-        if (legUnans) legUnans.innerText = `${labels.legUnanswered}: ${unansweredCount}`;
-        if (legCur) legCur.innerText = labels.legCurrent;
-    }
-
-    function jumpToQuestion(index) {
-        if (index >= 0 && index < quizData.length) {
-            currentQuiz = index;
-            loadQuiz();
-        }
     }
 
     function selectAnswer(selectedButton, chosenLetter) {
@@ -1154,7 +1018,6 @@
         }
         
         selectedButton.classList.add('selected');
-        renderPaletteGrid();
     }
 
     function prevQuestion() {
