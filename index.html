@@ -138,14 +138,10 @@
             border-radius: 4px;
             text-align: left;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
-        .options button:hover:not(:disabled) {
+        .options button:hover {
             background-color: #e2e6ea;
-        }
-        .options button:disabled {
-            cursor: not-allowed;
-            opacity: 0.8;
         }
         .options button.selected {
             background-color: #d1ecf1;
@@ -928,14 +924,13 @@
             button.innerText = currentQuizData[letter][currentLang];
             button.setAttribute('data-ans', letter);
             
-            if(selectedAnswer !== null) {
-                button.disabled = true;
-                if(selectedAnswer === letter) {
-                    button.classList.add('selected');
-                }
-            } else {
-                button.addEventListener('click', () => selectAnswer(button, letter));
+            // Keep the chosen selection highlighted when language is toggled mid-question
+            if (selectedAnswer === letter) {
+                button.classList.add('selected');
             }
+            
+            // Retain click listener on all options so the user can re-select anytime
+            button.addEventListener('click', () => selectAnswer(button, letter));
             
             li.appendChild(button);
             optionsContainer.appendChild(li);
@@ -944,21 +939,26 @@
 
     function selectAnswer(selectedButton, chosenLetter) {
         selectedAnswer = chosenLetter;
+        
+        // Remove 'selected' styling from previously picked option without disabling buttons
         const buttons = optionsContainer.getElementsByTagName('button');
         for (let btn of buttons) {
             btn.classList.remove('selected');
-            btn.disabled = true; 
         }
+        
+        // Highlight active pick
         selectedButton.classList.add('selected');
         
-        if (chosenLetter === quizData[currentQuiz].correct) { 
-            score++; 
-        }
-        
+        // Show Proceed / Next Question button
         nextBtn.style.display = 'block';
     }
 
     function nextQuestion() {
+        // Calculate score on the final choice before advancing to the next question
+        if (selectedAnswer === quizData[currentQuiz].correct) { 
+            score++; 
+        }
+        
         currentQuiz++;
         loadQuiz();
     }
@@ -968,6 +968,13 @@
         isExamSubmitted = true;
         
         clearInterval(examTimerInterval);
+
+        // Score the currently highlighted option if time runs out before clicking Next
+        if (selectedAnswer !== null && currentQuiz < quizData.length) {
+            if (selectedAnswer === quizData[currentQuiz].correct) {
+                score++;
+            }
+        }
 
         const now = new Date();
         const localizedTimestamp = now.toLocaleDateString() + " " + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
@@ -1061,7 +1068,6 @@
         existingRecords.forEach(rec => {
             const currentStatus = rec.status || "Completed";
             const currentTimestamp = rec.timestamp || "N/A";
-            // The '\t' tab character forces Excel to treat the text fields without interpreting date formats
             csvContent += `"${currentTimestamp}","${rec.name}","${rec.designation}","${rec.station}","\t${rec.score}","${currentStatus}"\n`;
         });
 
