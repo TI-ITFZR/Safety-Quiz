@@ -20,7 +20,7 @@
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            max-width: 700px;
+            max-width: 760px;
             width: 100%;
             text-align: center;
             position: relative;
@@ -102,7 +102,7 @@
             align-items: center;
             border-bottom: 2px solid #eee;
             padding-bottom: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             margin-top: 20px;
         }
         .timer {
@@ -114,24 +114,34 @@
             border-radius: 4px;
             border: 1px solid #f5c2c7;
         }
+        .q-counter {
+            text-align: left;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #003366;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
         .question {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             margin-bottom: 20px;
             text-align: left;
             font-weight: bold;
             color: #222;
             white-space: pre-line;
+            line-height: 1.4;
         }
         .options {
             list-style-type: none;
             padding: 0;
+            margin: 0;
         }
         .options li {
             margin-bottom: 10px;
         }
         .options button {
             width: 100%;
-            padding: 12px;
+            padding: 12px 14px;
             font-size: 1rem;
             background-color: #f8f9fa;
             border: 1px solid #ddd;
@@ -139,6 +149,7 @@
             text-align: left;
             cursor: pointer;
             transition: all 0.2s;
+            line-height: 1.3;
         }
         .options button:hover {
             background-color: #e2e6ea;
@@ -149,22 +160,113 @@
             color: #0c5460;
             font-weight: bold;
         }
+
+        /* Palette Grid Styling */
+        .palette-card {
+            background-color: #fbfbfd;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 14px;
+            margin-top: 25px;
+        }
+        .palette-legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            font-weight: bold;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .legend-box {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            border: 1px solid #bbb;
+            display: inline-block;
+        }
+        .legend-answered { background-color: #28a745; border-color: #28a745; }
+        .legend-unanswered { background-color: #ffffff; border-color: #cccccc; }
+        .legend-current { background-color: #003366; border-color: #003366; }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
+            gap: 7px;
+        }
+        .palette-btn {
+            padding: 8px 0;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border: 1px solid #cccccc;
+            background-color: #ffffff;
+            color: #495057;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease-in-out;
+        }
+        .palette-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+        }
+        .palette-btn.answered {
+            background-color: #28a745;
+            color: #ffffff;
+            border-color: #218838;
+        }
+        .palette-btn.current {
+            border: 2px solid #003366 !important;
+            box-shadow: 0 0 0 2px rgba(0, 51, 102, 0.25);
+            font-weight: 900;
+        }
+        .palette-btn.current:not(.answered) {
+            background-color: #e7f1ff;
+            color: #003366;
+        }
+
+        .quiz-nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
         .action-btn {
             display: inline-block;
             width: 100%;
             padding: 14px;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             background-color: #003366;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin-top: 15px;
             font-weight: bold;
             text-transform: uppercase;
+            transition: background 0.2s;
         }
         .action-btn:hover {
             background-color: #002244;
+        }
+        .action-btn:disabled {
+            background-color: #cccccc !important;
+            cursor: not-allowed;
+            color: #666666;
+        }
+        .prev-btn {
+            background-color: #6c757d;
+        }
+        .prev-btn:hover:not(:disabled) {
+            background-color: #5a6268;
+        }
+        .submit-nav-btn {
+            background-color: #28a745;
+        }
+        .submit-nav-btn:hover {
+            background-color: #218838;
         }
         .admin-link {
             display: inline-block;
@@ -216,7 +318,7 @@
         <img class="railway-logo" src="https://upload.wikimedia.org/wikipedia/en/b/be/Indian_Railways.png" alt="Indian Railways Logo">
         <h1 id="main-title">Safety Quiz Competition 2026-27</h1>
         <div class="division-text" id="main-sub">Operating Department | Firozpur Division</div>
-        <button class="action-btn" id="start-btn">Proceed to Registration</button>
+        <button class="action-btn" id="start-btn" style="margin-top: 15px;">Proceed to Registration</button>
         <div class="admin-link" id="go-admin-btn">Admin Dashboard (Password Protected)</div>
     </div>
 
@@ -238,7 +340,7 @@
                 <label id="lbl-station" for="staff-station">Station of Staff *</label>
                 <input type="text" id="staff-station" required>
             </div>
-            <button type="submit" class="action-btn" id="reg-submit-btn">Start 30-Minute Quiz</button>
+            <button type="submit" class="action-btn" id="reg-submit-btn" style="margin-top: 15px;">Start 30-Minute Quiz</button>
         </form>
     </div>
 
@@ -247,9 +349,24 @@
             <h3 id="exam-terminal-title">Safety Quiz 2026-27</h3>
             <div class="timer" id="timer">Time Left: 30:00</div>
         </div>
+        <div class="q-counter" id="q-counter">Question 1 of 36</div>
         <div class="question" id="question">Loading question...</div>
         <ul class="options" id="options"></ul>
-        <button class="action-btn" id="next-button" style="display:none;">Next Question</button>
+        
+        <!-- Question Palette Grid -->
+        <div class="palette-card">
+            <div class="palette-legend" id="palette-legend">
+                <span class="legend-item"><span class="legend-box legend-answered"></span> <span id="leg-ans-txt">Answered: 0</span></span>
+                <span class="legend-item"><span class="legend-box legend-unanswered"></span> <span id="leg-unans-txt">Unattempted: 36</span></span>
+                <span class="legend-item"><span class="legend-box legend-current"></span> <span id="leg-cur-txt">Current</span></span>
+            </div>
+            <div class="palette-grid" id="palette-grid"></div>
+        </div>
+
+        <div class="quiz-nav-buttons">
+            <button type="button" class="action-btn prev-btn" id="prev-button">Previous Question</button>
+            <button type="button" class="action-btn" id="next-button">Next Question</button>
+        </div>
     </div>
 
     <div id="end-page" class="hidden">
@@ -257,7 +374,7 @@
         <h1 id="thank-you-title">Thank You!</h1>
         <div class="division-text" id="end-sub">Operating Department | Firozpur Division</div>
         <div id="score-summary" style="font-size: 1.2rem; margin: 20px 0; color: #333;"></div>
-        <button class="action-btn" id="finish-btn">Finish & Back to Home</button>
+        <button class="action-btn" id="finish-btn" style="margin-top: 15px;">Finish & Back to Home</button>
     </div>
 
     <div id="admin-page" class="hidden">
@@ -309,7 +426,14 @@
             regSubmit: "Start 30-Minute Quiz",
             examTitle: "Safety Quiz 2026-27",
             timeLeft: "Time Left",
+            prevBtn: "Previous Question",
             nextBtn: "Next Question",
+            submitBtn: "Submit Exam",
+            qCounterWord: "Question",
+            qOfWord: "of",
+            legAnswered: "Answered",
+            legUnanswered: "Unattempted",
+            legCurrent: "Current",
             thankYou: "Thank You!",
             finishBtn: "Finish & Back to Home",
             msgCompleted: "Well Done",
@@ -335,7 +459,14 @@
             regSubmit: "30 मिनट की प्रश्नोत्तरी शुरू करें",
             examTitle: "सुरक्षा प्रश्नोत्तरी 2026-27",
             timeLeft: "शेष समय",
+            prevBtn: "पिछला प्रश्न",
             nextBtn: "अगला प्रश्न",
+            submitBtn: "परीक्षा जमा करें",
+            qCounterWord: "प्रश्न",
+            qOfWord: "का",
+            legAnswered: "हल किए गए",
+            legUnanswered: "हल नहीं किए",
+            legCurrent: "वर्तमान",
             thankYou: "धन्यवाद!",
             finishBtn: "समाप्त करें और होम पेज पर जाएं",
             msgCompleted: "बहुत बढ़िया",
@@ -350,8 +481,8 @@
     const quizData = [
         {
             question: {
-                en: "Q.1 When is a fresh SWR issued?",
-                hi: "Q.1 SWR कब नया जारी किया जाता है ?"
+                en: "When is a fresh SWR issued?",
+                hi: "SWR कब नया जारी किया जाता है ?"
             },
             a: { en: "Every 5 years or 5 amendments", hi: "हर 5 वर्ष या 5 संशोधन पर्चियों के बाद" },
             b: { en: "Every 3 years or 3 amendments", hi: "हर 3 वर्ष या 3 संशोधन पर्चियों के बाद" },
@@ -361,8 +492,8 @@
         },
         {
             question: {
-                en: "Q.2 What is the clearance condition for an A-Class ODC?",
-                hi: "Q.2 ए-क्लास ओ.डी.सी. में न्यूनतम क्लियरेंस की शर्त क्या है?"
+                en: "What is the clearance condition for an A-Class ODC?",
+                hi: "ए-क्लास ओ.डी.सी. में न्यूनतम क्लियरेंस की शर्त क्या है?"
             },
             a: { en: "Less than 4\"", hi: "4\" से कम" },
             b: { en: "Between 4\" to 6\"", hi: "4\" से 6\"" },
@@ -372,8 +503,8 @@
         },
         {
             question: {
-                en: "Q.3 What indicates FIBA activation?",
-                hi: "Q.3 FIBA एक्टिवेशन का संकेत क्या होता है?"
+                en: "What indicates FIBA activation?",
+                hi: "FIBA एक्टिवेशन का संकेत क्या होता है?"
             },
             a: { en: "Red indicator and hissing sound", hi: "लाल इंडिकेटर और हिसिंग आवाज़" },
             b: { en: "Green indicator", hi: "हरा इंडिकेटर" },
@@ -383,8 +514,8 @@
         },
         {
             question: {
-                en: "Q.4 Running time of slowest train = 6 min, Block Operation Time = 2 min, Efficiency Factor = 80%. What is the line capacity for 24 hours?",
-                hi: "Q.4 एक सेक्शन पर सबसे धीमी ट्रेन का रनिंग टाइम 6 मिनट है और ब्लॉक ऑपरेशन समय 2 मिनट है। दक्षता कारक 80% है। 24 घंटे में इस सेक्शन की लाइन कैपेसिटी कितनी होगी?"
+                en: "Running time of slowest train = 6 min, Block Operation Time = 2 min, Efficiency Factor = 80%. What is the line capacity for 24 hours?",
+                hi: "एक सेक्शन पर सबसे धीमी ट्रेन का रनिंग टाइम 6 मिनट है और ब्लॉक ऑपरेशन समय 2 मिनट है। दक्षता कारक 80% है। 24 घंटे में इस सेक्शन की लाइन कैपेसिटी कितनी होगी?"
             },
             a: { en: "180 trains", hi: "180 ट्रेने" },
             b: { en: "144 trains", hi: "144 ट्रेने" },
@@ -394,8 +525,8 @@
         },
         {
             question: {
-                en: "Q.5 Up to how many days in advance can empty wagons be marked \"sick\" for POH?",
-                hi: "Q.5 खाली डिब्बों को POH के लिए कितने दिन पहले तक \"सिक\" मार्क किया जा सकता है?"
+                en: "Up to how many days in advance can empty wagons be marked \"sick\" for POH?",
+                hi: "खाली डिब्बों को POH के लिए कितने दिन पहले तक \"सिक\" मार्क किया जा सकता है?"
             },
             a: { en: "15 days", hi: "15 दिन" },
             b: { en: "30 days", hi: "30 दिन" },
@@ -405,8 +536,8 @@
         },
         {
             question: {
-                en: "Q.6 Apart from Station Master Whose signatures are mandatory on T/806?",
-                hi: "Q.6 टी/806 पर स्टेशन मास्टर के अलावा किनके हस्ताक्षर अनिवार्य हैं?"
+                en: "Apart from Station Master Whose signatures are mandatory on T/806?",
+                hi: "टी/806 पर स्टेशन मास्टर के अलावा किनके हस्ताक्षर अनिवार्य हैं?"
             },
             a: { en: "Only Loco Pilot", hi: "केवल लोको पायलट" },
             b: { en: "Guard and Shunting Jamadar", hi: "गार्ड और शंटिंग जमादार" },
@@ -416,8 +547,8 @@
         },
         {
             question: {
-                en: "Q.7 Which of the following States is included in Region A?",
-                hi: "Q.7 निम्न में से कौन-सा राज्य Region A में शामिल है?"
+                en: "Which of the following States is included in Region A?",
+                hi: "निम्न में से कौन-सा राज्य Region A में शामिल है?"
             },
             a: { en: "Maharashtra", hi: "महाराष्ट्र" },
             b: { en: "Uttar Pradesh", hi: "उत्तर प्रदेश" },
@@ -427,8 +558,8 @@
         },
         {
             question: {
-                en: "Q.8 Braking distance must always be less than what?",
-                hi: "Q.8 ब्रेकिंग दूरी किससे कम होनी चाहिए?"
+                en: "Braking distance must always be less than what?",
+                hi: "ब्रेकिंग दूरी किससे कम होनी चाहिए?"
             },
             a: { en: "Maximum length of train", hi: "ट्रेन की अधिकतम लंबाई" },
             b: { en: "Tractive effort of locomotive", hi: "लोकोमोटिव का ट्रैक्टिव एफर्ट" },
@@ -438,8 +569,8 @@
         },
         {
             question: {
-                en: "Q.9 If the CRS does not want to investigate serious accidents then who will investigate?",
-                hi: "Q.9 यदि सी.आर.एस गंभीर दुर्घटनाओं की जाँच नहीं करना चाहता है तो जाँच कौन करेगा ?"
+                en: "If the CRS does not want to investigate serious accidents then who will investigate?",
+                hi: "यदि सी.आर.एस गंभीर दुर्घटनाओं की जाँच नहीं करना चाहता है तो जाँच कौन करेगा ?"
             },
             a: { en: "Junior officers under DRM", hi: "डीआरएम के अधीन कनिष्ठ अधिकारी" },
             b: { en: "JAG officers under DRM", hi: "डीआरएम के अधीन जेएजी अधिकारी" },
@@ -449,8 +580,8 @@
         },
         {
             question: {
-                en: "Q.10 Before uncoupling vehicles in a gradient section (1:400 or steeper), what must be done compulsorily?",
-                hi: "Q.10 ग्रेडिएंट सेक्शन (1:400 या ज्यादा) में गाड़ियों को अनकपल करने से पहले क्या करना अनिवार्य है?"
+                en: "Before uncoupling vehicles in a gradient section (1:400 or steeper), what must be done compulsorily?",
+                hi: "ग्रेडिएंट सेक्शन (1:400 या ज्यादा) में गाड़ियों को अनकपल करने से पहले क्या करना अनिवार्य है?"
             },
             a: { en: "Inform SM first", hi: "पहले SM को सूचना दें" },
             b: { en: "Apply hand brakes and use sprags/wedges/skids", hi: "हैंड ब्रेक लगाएँ और स्प्रेग/वेज/स्किड इस्तेमाल करें" },
@@ -460,8 +591,8 @@
         },
         {
             question: {
-                en: "Q.11 Which machine is used for Turnout packing?",
-                hi: "Q.11 टर्नआउट पैकिंग (Turnout packing) के लिए किस मशीन का उपयोग किया जाता है?"
+                en: "Which machine is used for Turnout packing?",
+                hi: "टर्नआउट पैकिंग (Turnout packing) के लिए किस मशीन का उपयोग किया जाता है?"
             },
             a: { en: "BCM", hi: "बीसीएम" },
             b: { en: "FRM", hi: "एफआरएम" },
@@ -471,8 +602,8 @@
         },
         {
             question: {
-                en: "Q.12 What is the ROH interval of Brake Vans (BVZI, BVZC, BVCM)?",
-                hi: "Q.12 ब्रेक वैन (BVZI, BVZC, BVCM) का ROH अंतराल कितने महीनों का है?"
+                en: "What is the ROH interval of Brake Vans (BVZI, BVZC, BVCM)?",
+                hi: "ब्रेक वैन (BVZI, BVZC, BVCM) का ROH अंतराल कितने महीनों का है?"
             },
             a: { en: "24 months", hi: "24 माह" },
             b: { en: "20 months", hi: "20 माह" },
@@ -482,8 +613,8 @@
         },
         {
             question: {
-                en: "Q.13 Where is a Traffic Gate situated?",
-                hi: "Q.13 ट्रैफिक गेट कहाँ स्थित होता है?"
+                en: "Where is a Traffic Gate situated?",
+                hi: "ट्रैफिक गेट कहाँ स्थित होता है?"
             },
             a: { en: "Within the outermost stop signal", hi: "बाहरी स्टॉप सिग्नल के भीतर" },
             b: { en: "Outside the outermost stop signal", hi: "बाहरी स्टॉप सिग्नल के बाहर" },
@@ -493,8 +624,8 @@
         },
         {
             question: {
-                en: "Q.14 Official Languages Act, 1963.According to Section 3(3), what should be the form of administrative reports laid before Parliament?",
-                hi: "Q.14 राजभाषा अधिनियम, 1963. धारा 3(3) के अनुसार, संसद में रखे जाने वाले प्रशासनिक रिपोर्टों का रूप क्या होगा?"
+                en: "Official Languages Act, 1963. According to Section 3(3), what should be the form of administrative reports laid before Parliament?",
+                hi: "राजभाषा अधिनियम, 1963. धारा 3(3) के अनुसार, संसद में रखे जाने वाले प्रशासनिक रिपोर्टों का रूप क्या होगा?"
             },
             a: { en: "Only English", hi: "केवल अंग्रेज़ी" },
             b: { en: "Only Hindi", hi: "केवल हिंदी" },
@@ -504,8 +635,8 @@
         },
         {
             question: {
-                en: "Q.15 What type of wagon is BCN?",
-                hi: "Q.15 BCN वैगन किस प्रकार का है?"
+                en: "What type of wagon is BCN?",
+                hi: "BCN वैगन किस प्रकार का है?"
             },
             a: { en: "Bogie flat wagon", hi: "बोगी फ्लैट वैगन" },
             b: { en: "Bogie open wagon", hi: "बोगी ओपन वैगन" },
@@ -515,19 +646,19 @@
         },
         {
             question: {
-                en: "Q.16 BLCA/BLCB/BLLA/BLLB are used for what purpose?",
-                hi: "Q.16 BLCA/BLCB/BLLA/BLLB' किसके लिए उपयोग किए जाते हैं?"
+                en: "BLCA/BLCB/BLLA/BLLB are used for what purpose?",
+                hi: "BLCA/BLCB/BLLA/BLLB' किसके लिए उपयोग किए जाते हैं?"
             },
             a: { en: "Tank loading", hi: "टैंक लोडिंग" },
-            b: { en: "container Loading", hi: "कंटेनर लोडिंग" },
+            b: { en: "Container Loading", hi: "कंटेनर लोडिंग" },
             c: { en: "Coal Loading", hi: "कोयला लोडिंग" },
             d: { en: "Steel Loading", hi: "स्टील लोडिंग" },
             correct: "b"
         },
         {
             question: {
-                en: "Q.17 Which equipment provides 'data evidence' for investigation of 'Unusual incidences'?",
-                hi: "Q.17 असामान्य घटनाओं' (Unusual incidences) की जांच के लिए कौन सा उपकरण 'डेटा साक्ष्य' प्रदान करता है?"
+                en: "Which equipment provides 'data evidence' for investigation of 'Unusual incidences'?",
+                hi: "असामान्य घटनाओं' (Unusual incidences) की जांच के लिए कौन सा उपकरण 'डेटा साक्ष्य' प्रदान करता है?"
             },
             a: { en: "Block Instrument", hi: "ब्लॉक इंस्ट्रूमेंट" },
             b: { en: "Relay Rack", hi: "रिले रैक" },
@@ -537,8 +668,8 @@
         },
         {
             question: {
-                en: "Q.18 Interlocking may be provided between which of the following?",
-                hi: "Q.18 इंटरलॉकिंग का संबंध किन-किन के बीच हो सकता है?"
+                en: "Interlocking may be provided between which of the following?",
+                hi: "इंटरलॉकिंग का संबंध किन-किन के बीच हो सकता है?"
             },
             a: { en: "Signal & points", hi: "सिग्नल और पॉइंट" },
             b: { en: "Signal & gate", hi: "सिग्नल और गेट" },
@@ -548,8 +679,8 @@
         },
         {
             question: {
-                en: "Q.19 For new works, what is the normal height of the contact wire at the support point?",
-                hi: "Q.19 नए कार्यों के लिए, सपोर्ट पॉइंट पर कॉन्टैक्ट वायर (संपर्क तार) की सामान्य ऊंचाई क्या होती है?"
+                en: "For new works, what is the normal height of the contact wire at the support point?",
+                hi: "नए कार्यों के लिए, सपोर्ट पॉइंट पर कॉन्टैक्ट वायर (संपर्क तार) की सामान्य ऊंचाई क्या होती है?"
             },
             a: { en: "5.50 m", hi: "5.50 m" },
             b: { en: "5.55 m", hi: "5.55 m" },
@@ -559,8 +690,8 @@
         },
         {
             question: {
-                en: "Q.20 When a shunt signal is placed below a stop signal, what does it display in the 'ON' position?",
-                hi: "Q.20 जब शंट सिग्नल किसी स्टॉप सिग्नल के नीचे लगाया जाता है, तो 'ON' स्थिति में यह क्या दिखाता है?"
+                en: "When a shunt signal is placed below a stop signal, what does it display in the 'ON' position?",
+                hi: "जब शंट सिग्नल किसी स्टॉप सिग्नल के नीचे लगाया जाता है, तो 'ON' स्थिति में यह क्या दिखाता है?"
             },
             a: { en: "No light", hi: "कोई प्रकाश नहीं" },
             b: { en: "White light", hi: "सफेद बत्ती" },
@@ -570,8 +701,8 @@
         },
         {
             question: {
-                en: "Q.21 What is the permissible flatness limit for Goods Stock?",
-                hi: "Q.21 माल गाड़ियों के लिए अनुमत फ्लैटनेस सीमा कितनी है?"
+                en: "What is the permissible flatness limit for Goods Stock?",
+                hi: "माल गाड़ियों के लिए अनुमत फ्लैटनेस सीमा कितनी है?"
             },
             a: { en: "40 mm", hi: "40 mm" },
             b: { en: "50 mm", hi: "50 mm" },
@@ -581,8 +712,8 @@
         },
         {
             question: {
-                en: "Q.22 If both Starter and Advanced Starter are defective, how many authorities are issued?",
-                hi: "Q.22 यदि स्टार्टर और एडवांस्ड स्टार्टर दोनों खराब हों, तो कितने प्राधिकरण जारी किए जाते हैं?"
+                en: "If both Starter and Advanced Starter are defective, how many authorities are issued?",
+                hi: "यदि स्टार्टर और एडवांस्ड स्टार्टर दोनों खराब हों, तो कितने प्राधिकरण जारी किए जाते हैं?"
             },
             a: { en: "Two separate T/369(3b)", hi: "दो अलग-अलग T/369(3b)" },
             b: { en: "A single T/369(3b)", hi: "एक ही T/369(3b)" },
@@ -592,8 +723,8 @@
         },
         {
             question: {
-                en: "Q.23 How many Private Numbers does SM exchange in case of failure of IB stop signal ?",
-                hi: "Q.23 IB स्टॉप सिग्नल डिफेक्टिव होने की स्थिति में SM कितने प्राइवेट नंबरों का आदान-प्रदान करता है?"
+                en: "How many Private Numbers does SM exchange in case of failure of IB stop signal?",
+                hi: "IB स्टॉप सिग्नल डिफेक्टिव होने की स्थिति में SM कितने प्राइवेट नंबरों का आदान-प्रदान करता है?"
             },
             a: { en: "Only one Line Clear", hi: "केवल एक - लाइन क्लियर" },
             b: { en: "Only one Section Clear", hi: "केवल एक - सेक्शन क्लियर" },
@@ -603,19 +734,19 @@
         },
         {
             question: {
-                en: "Q.24 In which register shall the Station Master (SM) record details of all Signal related failures?",
-                hi: "Q.24 स्टेशन मास्टर (SM) सिग्नल से सम्बंधित सभी विफलताओं का विवरण किस रजिस्टर में दर्ज करेगा?"
+                en: "In which register shall the Station Master (SM) record details of all Signal related failures?",
+                hi: "स्टेशन मास्टर (SM) सिग्नल से सम्बंधित सभी विफलताओं का विवरण किस रजिस्टर में दर्ज करेगा?"
             },
             a: { en: "SI-24", hi: "SI-24" },
             b: { en: "SI-4", hi: "SI-4" },
             c: { en: "TSR", hi: "TSR" },
-            d: { en: "no recording is necessary", hi: "कोई रिकॉर्डिंग आवश्यक नहीं है" },
+            d: { en: "No recording is necessary", hi: "कोई रिकॉर्डिंग आवश्यक नहीं है" },
             correct: "a"
         },
         {
             question: {
-                en: "Q.25 What is the code for 'Cancel Last Signal' or 'Signal given in error'?",
-                hi: "Q.25 'पिछला सिग्नल रद्द करें' (Cancel Last Signal) या 'सिग्नल गलती से दिया गया' (Signal given in error) के लिए कोड क्या है?"
+                en: "What is the code for 'Cancel Last Signal' or 'Signal given in error'?",
+                hi: "'पिछला सिग्नल रद्द करें' (Cancel Last Signal) या 'सिग्नल गलती से दिया गया' (Signal given in error) के लिए कोड क्या है?"
             },
             a: { en: "2 beats", hi: "2 घंटियाँ" },
             b: { en: "3 beats", hi: "3 घंटियाँ" },
@@ -625,8 +756,8 @@
         },
         {
             question: {
-                en: "Q.26 In what condition should the operating handle of an isolator switch always be kept?",
-                hi: "Q.26 आइसोलेटर स्विच का ऑपरेटिंग हैंडल हमेशा किस स्थिति में रखा जाना चाहिए?"
+                en: "In what condition should the operating handle of an isolator switch always be kept?",
+                hi: "आइसोलेटर स्विच का ऑपरेटिंग हैंडल हमेशा किस स्थिति में रखा जाना चाहिए?"
             },
             a: { en: "Open", hi: "खुला" },
             b: { en: "Closed", hi: "बंद" },
@@ -636,8 +767,8 @@
         },
         {
             question: {
-                en: "Q.27 Which part of the Constitution deals with the official language?",
-                hi: "Q.27 संविधान का कौन-सा भाग राजभाषा से संबंधित है?"
+                en: "Which part of the Constitution deals with the official language?",
+                hi: "संविधान का कौन-सा भाग राजभाषा से संबंधित है?"
             },
             a: { en: "Part XVI", hi: "भाग XVI" },
             b: { en: "Part XVII", hi: "भाग XVII" },
@@ -647,8 +778,8 @@
         },
         {
             question: {
-                en: "Q.28 When DLBI/UFSBI fails, which Authority to Proceed will be used?",
-                hi: "Q.28 जब DLBI/UFSBI विफल हो जाता है, उस स्थिति में कौन-सा प्रस्थान प्राधिकार प्रयोग किया जाएगा?"
+                en: "When DLBI/UFSBI fails, which Authority to Proceed will be used?",
+                hi: "जब DLBI/UFSBI विफल हो जाता है, उस स्थिति में कौन-सा प्रस्थान प्राधिकार प्रयोग किया जाएगा?"
             },
             a: { en: "T/369(3b)", hi: "T/369(3b)" },
             b: { en: "T/369(3b)+Private number", hi: "T/369(3b)+Private number/प्राइवेट नंबर" },
@@ -658,30 +789,30 @@
         },
         {
             question: {
-                en: "Q.29 What exemption is provided for cabins of large yards with shunting activities?",
-                hi: "Q.29 बड़े यार्ड में शंटिंग गतिविधियों वाले कैबिन्स के लिए क्या छूट दी गई है?"
+                en: "What exemption is provided for cabins of large yards with shunting activities?",
+                hi: "बड़े यार्ड में शंटिंग गतिविधियों वाले कैबिन्स के लिए क्या छूट दी गई है?"
             },
-            a: { en: "exchanging All Right Signal is not necessary", hi: "ऑल राइट सिग्नल का आदान-प्रदान आवश्यक नहीं है" },
-            b: { en: "exchanging All Right Signal is necessary", hi: "ऑल राइट सिग्नल का आदान-प्रदान आवश्यक है" },
-            c: { en: "exchanging All Right Signal is not necessary but must watch the train", hi: "ऑल राइट सिग्नल का आदान-प्रदान आवश्यक नहीं है लेकिन ट्रेन पर नजर रखनी है" },
+            a: { en: "Exchanging All Right Signal is not necessary", hi: "ऑल राइट सिग्नल का आदान-प्रदान आवश्यक नहीं है" },
+            b: { en: "Exchanging All Right Signal is necessary", hi: "ऑल राइट सिग्नल का आदान-प्रदान आवश्यक है" },
+            c: { en: "Exchanging All Right Signal is not necessary but must watch the train", hi: "ऑल राइट सिग्नल का आदान-प्रदान आवश्यक नहीं है लेकिन ट्रेन पर नजर रखनी है" },
             d: { en: "Merely placing flag/lamp in view", hi: "सिर्फ झंडा/लैम्प नजर में रखना" },
             correct: "c"
         },
         {
             question: {
-                en: "Q.30 If a zonal railway needs to frame rules as per local conditions, which rules will it issue and by whom are they framed?",
-                hi: "Q.30 यदि किसी ज़ोनल रेलवे को स्थानीय परिस्थितियों के अनुसार नियम बनाने हों, तो उसे कौन-से नियम बनाने होंगे, और वे किस प्राधिकारी द्वारा बनाए जाते हैं?"
+                en: "If a zonal railway needs to frame rules as per local conditions, which rules will it issue and by whom are they framed?",
+                hi: "यदि किसी ज़ोनल रेलवे को स्थानीय परिस्थितियों के अनुसार नियम बनाने हों, तो उसे कौन-से नियम बनाने होंगे, और वे किस प्राधिकारी द्वारा बनाए जाते हैं?"
             },
             a: { en: "GR - By Railway Board", hi: "GR - रेलवे बोर्ड द्वारा" },
-            b: { en: "SR- By PCOM", hi: "SR- पी.सी.०.एम द्वारा" },
-            c: { en: "Approved Special Instructions - By CRS", hi: "विशेष अनुमोदित निर्देश- सी.आर.एस. द्वारा" },
+            b: { en: "SR - By PCOM", hi: "SR - पी.सी.ओ.एम द्वारा" },
+            c: { en: "Approved Special Instructions - By CRS", hi: "विशेष अनुमोदित निर्देश - सी.आर.एस. द्वारा" },
             d: { en: "Special Instructions - By Railway Board", hi: "विशेष निर्देश - रेलवे बोर्ड द्वारा" },
             correct: "b"
         },
         {
             question: {
-                en: "Q.31 For how long is the BPC of a Dedicated Parcel Train valid?",
-                hi: "Q.31 समर्पित पार्सल ट्रेन (Dedicated Parcel Train) का BPC कितने समय के लिए वैध होता है?"
+                en: "For how long is the BPC of a Dedicated Parcel Train valid?",
+                hi: "समर्पित पार्सल ट्रेन (Dedicated Parcel Train) का BPC कितने समय के लिए वैध होता है?"
             },
             a: { en: "7 days", hi: "7 दिन" },
             b: { en: "10 days", hi: "10 दिन" },
@@ -691,8 +822,8 @@
         },
         {
             question: {
-                en: "Q.32 If an engine is attached at the rear, who ensures the brake continuity check?",
-                hi: "Q.32 अगर ट्रेन के पीछे इंजन जुड़ा हो तो ब्रेक कंटिन्यूटी चेक कौन करता है?"
+                en: "If an engine is attached at the rear, who ensures the brake continuity check?",
+                hi: "अगर ट्रेन के पीछे इंजन जुड़ा हो तो ब्रेक कंटिन्यूटी चेक कौन करता है?"
             },
             a: { en: "Guard", hi: "गार्ड" },
             b: { en: "Station Master", hi: "स्टेशन मास्टर" },
@@ -702,8 +833,8 @@
         },
         {
             question: {
-                en: "Q.33 Consider statements regarding objectives of IRPSM:\n1. Online creation of 'New Works' proposals.\n2. Replacing existing manual system.\n3. Managing staff salary.\nWhich among the above is/are correct:",
-                hi: "Q.33 IRPSM के उद्देश्यों के संबंध में निम्नलिखित कथनों पर विचार करें:\n1. 'नए कार्यों' के प्रस्तावों का ऑनलाइन निर्माण ।\n2. मौजूदा मैनुअल सिस्टम को बदलना ।\n3. कर्मचारियों के वेतन का प्रबंधन करना।\nउपरोक्त में से कौन सा/से सही है:"
+                en: "Consider statements regarding objectives of IRPSM:\n1. Online creation of 'New Works' proposals.\n2. Replacing existing manual system.\n3. Managing staff salary.\nWhich among the above is/are correct:",
+                hi: "IRPSM के उद्देश्यों के संबंध में निम्नलिखित कथनों पर विचार करें:\n1. 'नए कार्यों' के प्रस्तावों का ऑनलाइन निर्माण ।\n2. मौजूदा मैनुअल सिस्टम को बदलना ।\n3. कर्मचारियों के वेतन का प्रबंधन करना।\nउपरोक्त में से कौन सा/से सही है:"
             },
             a: { en: "Only 1 and 2 are correct", hi: "केवल 1 और 2 सही हैं" },
             b: { en: "Only 2 and 3 are correct", hi: "केवल 2 और 3 सही हैं" },
@@ -713,8 +844,8 @@
         },
         {
             question: {
-                en: "Q.34 What is the most important condition before resetting BPAC?",
-                hi: "Q.34 बीपीएसी (BPAC) को रीसेट करने से पहले सबसे महत्वपूर्ण शर्त क्या है?"
+                en: "What is the most important condition before resetting BPAC?",
+                hi: "बीपीएसी (BPAC) को रीसेट करने से पहले सबसे महत्वपूर्ण शर्त क्या है?"
             },
             a: { en: "Taking Traffic Block", hi: "ट्रैफिक ब्लॉक लेना" },
             b: { en: "Calling S&T staff", hi: "एस एंड टी स्टाफ को बुलाना" },
@@ -724,8 +855,8 @@
         },
         {
             question: {
-                en: "Q.35 What is the main purpose of isolation?",
-                hi: "Q.35 आइसोलेशन का मुख्य उद्देश्य क्या है?"
+                en: "What is the main purpose of isolation?",
+                hi: "आइसोलेशन का मुख्य उद्देश्य क्या है?"
             },
             a: { en: "To safely separate one line from another", hi: "एक line को दूसरी line से सुरक्षित रूप से अलग करना" },
             b: { en: "Connecting loop line to main line", hi: "मुख्य लाइन से लूप लाइन को जोड़ना" },
@@ -735,8 +866,8 @@
         },
         {
             question: {
-                en: "Q.36 What is the bell code for \"Train Entering Block Section\" (TES)?",
-                hi: "Q.36 \"ब्लॉक सेक्शन में प्रवेश करने वाली ट्रेन\" (TES) के लिए बेल कोड क्या है?"
+                en: "What is the bell code for \"Train Entering Block Section\" (TES)?",
+                hi: "\"ब्लॉक सेक्शन में प्रवेश करने वाली ट्रेन\" (TES) के लिए बेल कोड क्या है?"
             },
             a: { en: "000", hi: "000" },
             b: { en: "0000", hi: "0000" },
@@ -753,10 +884,10 @@
     let pDetails = { name: "", designation: "", station: "" };
     let isExamSubmitted = false;
     let submissionStatus = "Completed";
-    let selectedAnswer = null;
+    let userAnswers = {}; // Maps question index -> selected option letter ('a', 'b', 'c', 'd')
 
     let startPage, regPage, quizPage, endPage, adminPage;
-    let quizForm, questionEl, optionsContainer, nextBtn, timerEl, scoreSummaryEl, adminTableBody;
+    let quizForm, qCounterEl, questionEl, optionsContainer, paletteGridEl, prevBtn, nextBtn, timerEl, scoreSummaryEl, adminTableBody;
 
     document.addEventListener("DOMContentLoaded", function () {
         const ADMIN_PASSWORD = "Operating@123"; 
@@ -768,8 +899,11 @@
         adminPage = document.getElementById('admin-page');
         
         quizForm = document.getElementById('quiz-form');
+        qCounterEl = document.getElementById('q-counter');
         questionEl = document.getElementById('question');
         optionsContainer = document.getElementById('options');
+        paletteGridEl = document.getElementById('palette-grid');
+        prevBtn = document.getElementById('prev-button');
         nextBtn = document.getElementById('next-button');
         timerEl = document.getElementById('timer');
         scoreSummaryEl = document.getElementById('score-summary');
@@ -813,6 +947,7 @@
             loadQuiz();
         });
 
+        prevBtn.addEventListener('click', prevQuestion);
         nextBtn.addEventListener('click', nextQuestion);
         
         document.getElementById('finish-btn').addEventListener('click', function() {
@@ -861,7 +996,17 @@
         document.getElementById('reg-submit-btn').innerText = labels.regSubmit;
         
         document.getElementById('exam-terminal-title').innerText = labels.examTitle;
-        nextBtn.innerText = labels.nextBtn;
+        prevBtn.innerText = labels.prevBtn;
+        
+        const isFinalQuestion = (currentQuiz === quizData.length - 1);
+        nextBtn.innerText = isFinalQuestion ? labels.submitBtn : labels.nextBtn;
+        if (isFinalQuestion) {
+            nextBtn.classList.add('submit-nav-btn');
+        } else {
+            nextBtn.classList.remove('submit-nav-btn');
+        }
+
+        updatePaletteLegend();
         updateTimerDisplay();
 
         document.getElementById('thank-you-title').innerText = labels.thankYou;
@@ -906,61 +1051,137 @@
             return;
         }
 
-        nextBtn.style.display = 'none';
-        selectedAnswer = null;
+        // Enable/Disable Previous button depending on whether we are on Question 1
+        prevBtn.disabled = (currentQuiz === 0);
+
+        // Customize Next / Submit appearance
+        const isFinal = (currentQuiz === quizData.length - 1);
+        nextBtn.innerText = isFinal ? uiLabels[currentLang].submitBtn : uiLabels[currentLang].nextBtn;
+        if (isFinal) {
+            nextBtn.classList.add('submit-nav-btn');
+        } else {
+            nextBtn.classList.remove('submit-nav-btn');
+        }
+
         updateQuizLanguageOnly();
     }
 
     function updateQuizLanguageOnly() {
         if (currentQuiz >= quizData.length) return;
         
+        const labels = uiLabels[currentLang];
+        qCounterEl.innerText = `${labels.qCounterWord} ${currentQuiz + 1} ${labels.qOfWord} ${quizData.length}`;
+
         const currentQuizData = quizData[currentQuiz];
-        questionEl.innerText = currentQuizData.question[currentLang];
+        questionEl.innerText = `Q.${currentQuiz + 1} ${currentQuizData.question[currentLang]}`;
         optionsContainer.innerHTML = '';
+        
+        const currentChosen = userAnswers[currentQuiz];
         
         ['a', 'b', 'c', 'd'].forEach(letter => {
             const li = document.createElement('li');
             const button = document.createElement('button');
+            button.type = "button";
             button.innerText = currentQuizData[letter][currentLang];
             button.setAttribute('data-ans', letter);
             
-            // Keep the chosen selection highlighted when language is toggled mid-question
-            if (selectedAnswer === letter) {
+            if (currentChosen === letter) {
                 button.classList.add('selected');
             }
             
-            // Retain click listener on all options so the user can re-select anytime
             button.addEventListener('click', () => selectAnswer(button, letter));
             
             li.appendChild(button);
             optionsContainer.appendChild(li);
         });
+
+        renderPaletteGrid();
+    }
+
+    function renderPaletteGrid() {
+        if (!paletteGridEl) return;
+        paletteGridEl.innerHTML = '';
+
+        quizData.forEach((_, idx) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'palette-btn';
+            btn.innerText = idx + 1;
+
+            const isAnswered = userAnswers[idx] !== undefined && userAnswers[idx] !== null;
+            if (isAnswered) {
+                btn.classList.add('answered');
+            }
+
+            if (idx === currentQuiz) {
+                btn.classList.add('current');
+            }
+
+            btn.addEventListener('click', () => jumpToQuestion(idx));
+            paletteGridEl.appendChild(btn);
+        });
+
+        updatePaletteLegend();
+    }
+
+    function updatePaletteLegend() {
+        const labels = uiLabels[currentLang];
+        const answeredCount = Object.keys(userAnswers).length;
+        const unansweredCount = quizData.length - answeredCount;
+
+        const legAns = document.getElementById('leg-ans-txt');
+        const legUnans = document.getElementById('leg-unans-txt');
+        const legCur = document.getElementById('leg-cur-txt');
+
+        if (legAns) legAns.innerText = `${labels.legAnswered}: ${answeredCount}`;
+        if (legUnans) legUnans.innerText = `${labels.legUnanswered}: ${unansweredCount}`;
+        if (legCur) legCur.innerText = labels.legCurrent;
+    }
+
+    function jumpToQuestion(index) {
+        if (index >= 0 && index < quizData.length) {
+            currentQuiz = index;
+            loadQuiz();
+        }
     }
 
     function selectAnswer(selectedButton, chosenLetter) {
-        selectedAnswer = chosenLetter;
+        userAnswers[currentQuiz] = chosenLetter;
         
-        // Remove 'selected' styling from previously picked option without disabling buttons
         const buttons = optionsContainer.getElementsByTagName('button');
         for (let btn of buttons) {
             btn.classList.remove('selected');
         }
         
-        // Highlight active pick
         selectedButton.classList.add('selected');
-        
-        // Show Proceed / Next Question button
-        nextBtn.style.display = 'block';
+        renderPaletteGrid();
+    }
+
+    function prevQuestion() {
+        if (currentQuiz > 0) {
+            currentQuiz--;
+            loadQuiz();
+        }
     }
 
     function nextQuestion() {
-        // Calculate score on the final choice before advancing to the next question
-        if (selectedAnswer === quizData[currentQuiz].correct) { 
-            score++; 
+        if (currentQuiz < quizData.length - 1) {
+            currentQuiz++;
+            loadQuiz();
+        } else {
+            // Reached Question 36 and clicked 'Submit Exam'
+            saveAndShowResults();
         }
-        
-        currentQuiz++;
-        loadQuiz();
+    }
+
+    function calculateFinalScore() {
+        let total = 0;
+        quizData.forEach((item, idx) => {
+            if (userAnswers[idx] && userAnswers[idx] === item.correct) {
+                total++;
+            }
+        });
+        return total;
     }
 
     function saveAndShowResults() {
@@ -969,12 +1190,7 @@
         
         clearInterval(examTimerInterval);
 
-        // Score the currently highlighted option if time runs out before clicking Next
-        if (selectedAnswer !== null && currentQuiz < quizData.length) {
-            if (selectedAnswer === quizData[currentQuiz].correct) {
-                score++;
-            }
-        }
+        score = calculateFinalScore();
 
         const now = new Date();
         const localizedTimestamp = now.toLocaleDateString() + " " + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
@@ -1017,7 +1233,7 @@
         isExamSubmitted = false;
         submissionStatus = "Completed";
         pDetails = { name: "", designation: "", station: "" };
-        selectedAnswer = null;
+        userAnswers = {};
         
         quizForm.reset();
         switchLanguage('en'); 
