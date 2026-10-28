@@ -149,6 +149,65 @@
             color: #0c5460;
             font-weight: bold;
         }
+        .question-palette {
+            margin: 18px 0;
+            padding: 14px;
+            background: #f8f9fa;
+            border: 1px solid #e0e4e8;
+            border-radius: 6px;
+            text-align: left;
+        }
+        .palette-heading {
+            font-weight: bold;
+            color: #003366;
+            margin-bottom: 10px;
+        }
+        .palette-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 0.82rem;
+            margin-bottom: 12px;
+            color: #444;
+        }
+        .legend-item { display: inline-flex; align-items: center; gap: 5px; }
+        .legend-dot {
+            width: 11px; height: 11px; border-radius: 3px;
+            display: inline-block; border: 1px solid #bbb;
+        }
+        .legend-dot.unanswered { background: #fff; }
+        .legend-dot.answered { background: #d4edda; border-color: #218838; }
+        .legend-dot.current { background: #003366; border-color: #003366; }
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 7px;
+        }
+        .palette-btn {
+            min-height: 38px;
+            border: 1px solid #b9c0c8;
+            border-radius: 5px;
+            background: #fff;
+            color: #333;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .palette-btn.answered { background: #d4edda; border-color: #218838; color: #155724; }
+        .palette-btn.current { background: #003366; border-color: #003366; color: #fff; outline: 2px solid #8db8e8; }
+        .palette-btn.current.answered { background: #003366; color: #fff; }
+        .palette-summary { font-size: 0.9rem; margin-top: 10px; color: #444; }
+        .quiz-navigation { display: flex; gap: 10px; }
+        .quiz-navigation .action-btn { width: 50%; }
+        .secondary-btn { background: #6c757d; }
+        .secondary-btn:hover { background: #545b62; }
+        @media (max-width: 480px) {
+            body { padding: 8px; }
+            .quiz-container { padding: 16px; }
+            .palette-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+            .palette-btn { min-height: 36px; }
+            .header { align-items: flex-start; gap: 8px; }
+            .timer { font-size: 0.95rem; white-space: nowrap; }
+        }
         .action-btn {
             display: inline-block;
             width: 100%;
@@ -166,6 +225,8 @@
         .action-btn:hover {
             background-color: #002244;
         }
+        .action-btn.submit-btn { background-color: #28a745; }
+        .action-btn.submit-btn:hover { background-color: #218838; }
         .admin-link {
             display: inline-block;
             margin-top: 25px;
@@ -249,7 +310,20 @@
         </div>
         <div class="question" id="question">Loading question...</div>
         <ul class="options" id="options"></ul>
-        <button class="action-btn" id="next-button" style="display:none;">Next Question</button>
+        <div class="quiz-navigation">
+            <button class="action-btn secondary-btn" id="previous-button" type="button">Previous</button>
+            <button class="action-btn" id="next-button" type="button">Next Question</button>
+        </div>
+        <div class="question-palette">
+            <div class="palette-heading" id="palette-heading">Question Palette</div>
+            <div class="palette-legend">
+                <span class="legend-item"><span class="legend-dot unanswered"></span><span id="legend-unanswered">Unanswered</span></span>
+                <span class="legend-item"><span class="legend-dot answered"></span><span id="legend-answered">Answered</span></span>
+                <span class="legend-item"><span class="legend-dot current"></span><span id="legend-current">Current question</span></span>
+            </div>
+            <div class="palette-grid" id="question-palette-grid"></div>
+            <div class="palette-summary" id="palette-summary" aria-live="polite"></div>
+        </div>
     </div>
 
     <div id="end-page" class="hidden">
@@ -310,6 +384,14 @@
             examTitle: "Safety Quiz 2026-27",
             timeLeft: "Time Left",
             nextBtn: "Next Question",
+            previousBtn: "Previous",
+            submitBtn: "Submit Quiz",
+            paletteTitle: "Question Palette",
+            unanswered: "Unanswered",
+            answered: "Answered",
+            currentQuestion: "Current question",
+            answeredCount: "Answered",
+            ofLabel: "of",
             thankYou: "Thank You!",
             finishBtn: "Finish & Back to Home",
             msgCompleted: "Well Done",
@@ -336,6 +418,14 @@
             examTitle: "सुरक्षा प्रश्नोत्तरी 2026-27",
             timeLeft: "शेष समय",
             nextBtn: "अगला प्रश्न",
+            previousBtn: "पिछला प्रश्न",
+            submitBtn: "प्रश्नोत्तरी जमा करें",
+            paletteTitle: "प्रश्न सूची",
+            unanswered: "अनुत्तरित",
+            answered: "उत्तर दिया गया",
+            currentQuestion: "वर्तमान प्रश्न",
+            answeredCount: "उत्तर दिए गए",
+            ofLabel: "में से",
             thankYou: "धन्यवाद!",
             finishBtn: "समाप्त करें और होम पेज पर जाएं",
             msgCompleted: "बहुत बढ़िया",
@@ -754,9 +844,10 @@
     let isExamSubmitted = false;
     let submissionStatus = "Completed";
     let selectedAnswer = null;
+    let answers = [];
 
     let startPage, regPage, quizPage, endPage, adminPage;
-    let quizForm, questionEl, optionsContainer, nextBtn, timerEl, scoreSummaryEl, adminTableBody;
+    let quizForm, questionEl, optionsContainer, nextBtn, previousBtn, timerEl, scoreSummaryEl, adminTableBody;
 
     document.addEventListener("DOMContentLoaded", function () {
         const ADMIN_PASSWORD = "Operating@123"; 
@@ -771,6 +862,7 @@
         questionEl = document.getElementById('question');
         optionsContainer = document.getElementById('options');
         nextBtn = document.getElementById('next-button');
+        previousBtn = document.getElementById('previous-button');
         timerEl = document.getElementById('timer');
         scoreSummaryEl = document.getElementById('score-summary');
         adminTableBody = document.getElementById('admin-table-body');
@@ -809,11 +901,16 @@
             regPage.classList.add('hidden');
             quizPage.classList.remove('hidden');
             
+            answers = new Array(quizData.length).fill(null);
+            currentQuiz = 0;
+            score = 0;
             startGlobalExamTimer();
+            renderQuestionPalette();
             loadQuiz();
         });
 
         nextBtn.addEventListener('click', nextQuestion);
+        previousBtn.addEventListener('click', previousQuestion);
         
         document.getElementById('finish-btn').addEventListener('click', function() {
             resetQuizStateToHome();
@@ -861,8 +958,15 @@
         document.getElementById('reg-submit-btn').innerText = labels.regSubmit;
         
         document.getElementById('exam-terminal-title').innerText = labels.examTitle;
-        nextBtn.innerText = labels.nextBtn;
+        nextBtn.innerText = currentQuiz === quizData.length - 1 ? labels.submitBtn : labels.nextBtn;
+        nextBtn.classList.toggle('submit-btn', currentQuiz === quizData.length - 1);
+        previousBtn.innerText = labels.previousBtn;
+        document.getElementById('palette-heading').innerText = labels.paletteTitle;
+        document.getElementById('legend-unanswered').innerText = labels.unanswered;
+        document.getElementById('legend-answered').innerText = labels.answered;
+        document.getElementById('legend-current').innerText = labels.currentQuestion;
         updateTimerDisplay();
+        renderQuestionPalette();
 
         document.getElementById('thank-you-title').innerText = labels.thankYou;
         document.getElementById('end-sub').innerText = labels.mainSub;
@@ -901,66 +1005,110 @@
         if (isExamSubmitted) return;
 
         if (currentQuiz >= quizData.length) {
-            clearInterval(examTimerInterval);
             saveAndShowResults();
             return;
         }
 
-        nextBtn.style.display = 'none';
-        selectedAnswer = null;
+        selectedAnswer = answers[currentQuiz];
         updateQuizLanguageOnly();
+        renderQuestionPalette();
     }
 
     function updateQuizLanguageOnly() {
         if (currentQuiz >= quizData.length) return;
-        
+
+        const labels = uiLabels[currentLang];
         const currentQuizData = quizData[currentQuiz];
         questionEl.innerText = currentQuizData.question[currentLang];
         optionsContainer.innerHTML = '';
-        
+
         ['a', 'b', 'c', 'd'].forEach(letter => {
             const li = document.createElement('li');
             const button = document.createElement('button');
+            button.type = 'button';
             button.innerText = currentQuizData[letter][currentLang];
             button.setAttribute('data-ans', letter);
-            
-            // Keep the chosen selection highlighted when language is toggled mid-question
-            if (selectedAnswer === letter) {
-                button.classList.add('selected');
-            }
-            
-            // Retain click listener on all options so the user can re-select anytime
+
+            if (selectedAnswer === letter) button.classList.add('selected');
             button.addEventListener('click', () => selectAnswer(button, letter));
-            
+
             li.appendChild(button);
             optionsContainer.appendChild(li);
         });
+
+        previousBtn.disabled = currentQuiz === 0;
+        previousBtn.style.opacity = currentQuiz === 0 ? '0.55' : '1';
+        nextBtn.innerText = currentQuiz === quizData.length - 1 ? labels.submitBtn : labels.nextBtn;
+        nextBtn.classList.toggle('submit-btn', currentQuiz === quizData.length - 1);
+        nextBtn.style.display = 'block';
     }
 
     function selectAnswer(selectedButton, chosenLetter) {
         selectedAnswer = chosenLetter;
-        
-        // Remove 'selected' styling from previously picked option without disabling buttons
+        answers[currentQuiz] = chosenLetter;
+
         const buttons = optionsContainer.getElementsByTagName('button');
-        for (let btn of buttons) {
-            btn.classList.remove('selected');
-        }
-        
-        // Highlight active pick
+        for (let btn of buttons) btn.classList.remove('selected');
         selectedButton.classList.add('selected');
-        
-        // Show Proceed / Next Question button
-        nextBtn.style.display = 'block';
+
+        renderQuestionPalette();
+    }
+
+    function renderQuestionPalette() {
+        const grid = document.getElementById('question-palette-grid');
+        const summary = document.getElementById('palette-summary');
+        if (!grid || !summary) return;
+
+        const labels = uiLabels[currentLang];
+        grid.innerHTML = '';
+        let answeredCount = 0;
+
+        quizData.forEach((item, index) => {
+            const isAnswered = Boolean(answers[index]);
+            if (isAnswered) answeredCount++;
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'palette-btn' + (isAnswered ? ' answered' : '') + (index === currentQuiz ? ' current' : '');
+            btn.textContent = String(index + 1);
+            btn.setAttribute('aria-label', `Question ${index + 1}${isAnswered ? ', answered' : ', unanswered'}`);
+            btn.setAttribute('aria-current', index === currentQuiz ? 'step' : 'false');
+            btn.title = `Question ${index + 1} - ${isAnswered ? labels.answered : labels.unanswered}`;
+            btn.addEventListener('click', () => {
+                if (isExamSubmitted) return;
+                currentQuiz = index;
+                selectedAnswer = answers[currentQuiz];
+                updateQuizLanguageOnly();
+                renderQuestionPalette();
+            });
+            grid.appendChild(btn);
+        });
+
+        summary.textContent = `${labels.answeredCount}: ${answeredCount} ${labels.ofLabel} ${quizData.length}`;
     }
 
     function nextQuestion() {
-        // Calculate score on the final choice before advancing to the next question
-        if (selectedAnswer === quizData[currentQuiz].correct) { 
-            score++; 
+        if (currentQuiz >= quizData.length - 1) {
+            const unansweredCount = answers.filter(answer => !answer).length;
+            if (unansweredCount > 0) {
+                const confirmText = currentLang === 'hi'
+                    ? `${unansweredCount} प्रश्न अनुत्तरित हैं। क्या आप फिर भी प्रश्नोत्तरी जमा करना चाहते हैं?`
+                    : `${unansweredCount} question(s) are unanswered. Do you want to submit the quiz anyway?`;
+                if (!confirm(confirmText)) return;
+            }
+            saveAndShowResults();
+            return;
         }
-        
+
         currentQuiz++;
         loadQuiz();
+    }
+
+    function previousQuestion() {
+        if (currentQuiz > 0) {
+            currentQuiz--;
+            loadQuiz();
+        }
     }
 
     function saveAndShowResults() {
@@ -969,12 +1117,9 @@
         
         clearInterval(examTimerInterval);
 
-        // Score the currently highlighted option if time runs out before clicking Next
-        if (selectedAnswer !== null && currentQuiz < quizData.length) {
-            if (selectedAnswer === quizData[currentQuiz].correct) {
-                score++;
-            }
-        }
+        // Calculate from the saved answer array so revisiting questions never double-counts.
+        score = answers.reduce((total, answer, index) =>
+            total + (answer && answer === quizData[index].correct ? 1 : 0), 0);
 
         const now = new Date();
         const localizedTimestamp = now.toLocaleDateString() + " " + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
